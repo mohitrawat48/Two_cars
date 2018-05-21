@@ -1,0 +1,50 @@
+/*********************************
+
+Based off ball.sv from lab 8
+bush serves as visual illusion
+that the road is moving
+**********************************/
+
+module  bush ( input logic        Clk,                // 50 MHz clock
+                             Reset,              // Active-high reset signal
+                             frame_clk,          // The clock indicating a new frame (~60Hz)
+               input logic [9:0]   DrawX, DrawY,       // Current pixel coordinates to be drawn on the monitor
+               output logic  is_bush,             // Whether current pixel (DrawX, DrawY) belongs to ball or background
+					output logic [9:0] pixel_x_in_bush, pixel_y_in_bush, //relative to the Bike's top left pixel which is (0,0)					input logic [7:0]   keycode
+				);
+				
+	 //internal logic - retrieve data from registers
+	 logic [9:0] CurrX, CurrY;  //the top left coordinate of the Bike's current position
+	 
+	 CurrX = to be done;
+	 CurrY = to be done;
+    
+	 //Bike parameters
+    parameter [9:0] Bush_X_Min = CurrX;       // Leftmost point on the X axis
+    parameter [9:0] Bush_X_Max = CurrX + 10'd49;     // Rightmost point on the X axis
+    parameter [9:0] Bush_Y_Min = CurrY;       // Topmost point on the Y axis
+    parameter [9:0] Bush_Y_Max = CurrY + 10'd49;     // Bottommost point on the Y axis
+	 
+	 always_ff @ posedge(Clk)
+	 begin
+		if(Reset)
+		begin
+			to be done
+			reset bush position
+		end
+		else
+		begin
+			pixel_x_in_Bike <= DrawX - CurrX;
+			pixel_y_in_Bike <= DrawY - CurrY;
+		end
+	 end
+	 
+	 //Determine is_Bike
+	 always_comb
+	 begin
+		if( (DrawX >= Bush_X_Min && DrawX <= Bush_X_Max) && (DrawY >= Bush_Y_Min && DrawY <= Bush_Y_Max) )
+			is_bush = 1'b1;
+		else
+			is_bush = 1'b0;
+    end
+endmodule

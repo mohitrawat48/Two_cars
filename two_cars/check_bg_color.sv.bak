@@ -1,0 +1,13 @@
+module check_bg_color ( input logic [15:0] onchip_data,
+								output logic is_background
+							  );
+								
+								
+								
+								
+								
+								
+								
+								
+							
+endmodule

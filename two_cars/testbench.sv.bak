@@ -1,0 +1,86 @@
+<<<<<<< HEAD
+module testbench();
+
+timeunit 1ns;	// Half clock cycle at 100 MHz
+			// This is the amount of time represented by #1 
+timeprecision 1ns;
+
+				 logic Clk,VGA_CLK;
+				 
+initial begin: SIGNAL_INITIALIZATION
+   Clk = 1;
+	VGA_CLK = 1;
+end 
+/*
+	VGA_controller vga_controller_instance(.Clk(Clk), .Reset(Reset_h), 
+								.VGA_CLK(VGA_CLK),.VGA_HS(VGA_HS),.VGA_VS(VGA_VS), 
+								.VGA_BLANK_N(VGA_BLANK_N),.VGA_SYNC_N(VGA_SYNC_N),
+								.DrawX(my_DrawX), .DrawY(my_DrawY));
+	 
+	 VGA_manager my_VGA_manager( .Clk(sram_clk), .Reset(Reset_h),
+										  .VGA_HS(VGA_HS),.VGA_VS(VGA_VS),
+										  .VGA_R(VGA_R),.VGA_G(VGA_G),.VGA_B(VGA_B),
+								        .X_Cord(my_DrawX),.Y_Cord(my_DrawY),
+										  .CE(SRAM_CE_N),.UB(SRAM_UB_N),
+										  .LB(SRAM_LB_N),.OE(SRAM_OE_N),.WE(SRAM_WE_N),
+										  .ADDR(SRAM_ADDR),.Data(SRAM_DQ) );
+*/	 
+
+
+// Toggle the clock
+// #1 means wait for a delay of 1 timeunit
+always begin : CLOCK_GENERATION
+#5 Clk = ~Clk; 
+end
+
+
+//test begins here
+initial begin : TEST_VECTORS
+		
+
+
+		
+
+		
+end
+
+endmodule
+=======
+module testbench();
+
+		timeunit 10ns ;
+		timeprecision 1ns;
+	
+		logic [15:0] two_keycodes = 16'b00;
+		logic [7:0] player1_key = 8'b00;
+		logic [7:0] player2_key = 8'b00;
+		
+	 	mapkeys myMapKeys(.*);
+		
+		/*
+		input [15:0] two_keycodes,
+			output [7:0] player1_key, player2_key
+		*/
+
+		always begin : CLOCK_GENERATOR
+		#1 Clk = ~Clk;
+		end
+		
+		
+		initial begin : CLOCK_INITIALIZATION
+			Clk = 0;
+		end
+		
+	
+		
+	 	initial begin : TEST_VECTORS
+		//after 2 seconds
+		#2 two_keycodes = 16'h1A25;  //W8
+			$display("player1_key: %h\nplayer2_key: %h\n\n", player1_key, player2_key);
+		
+		end
+		
+endmodule
+
+	 
+>>>>>>> 5f7a2be8118640ac4a3cace6f2ca969f643f2712

@@ -1,0 +1,51 @@
+/*********************************
+
+Based off ball.sv from lab 8
+
+finishing line
+**********************************/
+
+module  bush ( input logic   Clk,                // 50 MHz clock
+                             Reset,              // Active-high reset signal
+                             frame_clk,          // The clock indicating a new frame (~60Hz)
+               input logic [9:0]   DrawX, DrawY,       // Current pixel coordinates to be drawn on the monitor
+               output logic  is_fline,             // Whether current pixel (DrawX, DrawY) belongs to ball or background
+					output logic [9:0] pixel_x_in_fline, pixel_y_in_fline, //relative to the Bike's top left pixel which is (0,0)					input logic [7:0]   keycode
+				);
+				
+	 //internal logic - retrieve data from registers
+	 logic [9:0] CurrX, CurrY;  //the top left coordinate of the Bike's current position
+	 
+	 CurrX = to be done;
+	 CurrY = to be done;
+    
+	 //Bike parameters
+    parameter [9:0] Fline_X_Min = CurrX;       // Leftmost point on the X axis
+    parameter [9:0] Fline_X_Max = CurrX + 10'd49;     // Rightmost point on the X axis
+    parameter [9:0] Fline_Y_Min = CurrY;       // Topmost point on the Y axis
+    parameter [9:0] Fline_Y_Max = CurrY + 10'd49;     // Bottommost point on the Y axis
+	 
+	 always_ff @ posedge(Clk)
+	 begin
+		if(Reset)
+		begin
+			to be done
+			remove finishing line
+			if it's on the screen
+		end
+		else
+		begin
+			pixel_x_in_fline <= DrawX - CurrX;
+			pixel_y_in_fline <= DrawY - CurrY;
+		end
+	 end
+	 
+	 //Determine is_Bike
+	 always_comb
+	 begin
+		if( (DrawX >= Fline_X_Min && DrawX <= Fline_X_Max) && (DrawY >= Fline_Y_Min && DrawY <= Fline_Y_Max) )
+			is_fline = 1'b1;
+		else
+			is_fline = 1'b0;
+    end
+endmodule

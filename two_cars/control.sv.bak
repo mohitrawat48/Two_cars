@@ -1,0 +1,184 @@
+//Two-always example for state machine
+
+module control (input  logic Clk, Reset, p1win, p2win, delay_finish,
+					 input logic [7:0] keycode,
+                output logic showMenu, show3, show2, show1, showGo, showp1win, showp2win,
+					 output logic [1:0] speed  //0 or 1 or 2 or 3 (max)
+					 );
+	 
+	 // 10 states
+	 enum logic [3:0] {
+		WAIT, THREE, TWO, ONE, GO,
+		SPEED1, SPEED2, SPEED3, WINP1, WINP2}   curr_state, next_state;
+		
+	//internal logic
+	logic [7:0] ENTER_KEY = 8'h28;
+	
+
+	//Sequential: Clk and Reset
+    always_ff @ (posedge Clk or posedge Reset)  
+    begin
+        if (Reset)  //asynchronous
+            curr_state <= WAIT;
+				
+        else 
+            curr_state <= next_state;
+    end
+
+    //Combinational: outputs and state transitions
+	 always_comb
+    begin
+        
+		  //state transitions
+		  next_state  = curr_state;	//default stay in the current state
+        unique case (curr_state) 
+
+            WAIT :	if(keycode == ENTER_KEY) next_state = THREE;
+				THREE:   if(delay_finish) next_state = TWO;
+				TWO  :   if(delay_finish) next_state = ONE;
+				ONE  :   if(delay_finish) next_state = GO;
+				GO   :   if(delay_finish) next_state = SPEED1;
+				SPEED1:  if(p1win) next_state = WINP1;
+							else if (p2win) next_state = WINP2;
+							else if (delay_finish) next_state = SPEED2;
+				SPEED2:  if(p1win) next_state = WINP1;
+							else if (p2win) next_state = WINP2;
+							else if (delay_finish) next_state = SPEED3;
+				SPEED3:  if(p1win) next_state = WINP1;
+							else if (p2win) next_state = WINP2;
+				WINP1:   if(delay_finish) next_state = WAIT;
+				WINP2:	if(delay_finish) next_state = WAIT;
+				
+							  
+        endcase
+   
+		  // Assign outputs based on ‘state’
+		  // output logic showMenu, show3, show2, show1, showGo, showp1win, showp2win,
+		  // output logic [1:0] speed
+        case (curr_state) 
+	   	   WAIT: 
+	         begin
+                showMenu = 1'b1;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				THREE: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b1;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				TWO: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b1;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				ONE: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b1;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				GO: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b1;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				SPEED1: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'd1;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				SPEED2: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'd2;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				SPEED3: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'd3;
+					 showp1win = 1'b0;
+					 showp2win = 1'b0;
+		      end
+				
+				WINP1: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b1;
+					 showp2win = 1'b0;
+		      end
+				
+				WINP2: 
+	         begin
+                showMenu = 1'b0;
+					 show3 = 1'b0;
+					 show2 = 1'b0;
+					 show1 = 1'b0;
+					 showGo = 1'b0;
+					 speed = 2'b0;
+					 showp1win = 1'b0;
+					 showp2win = 1'b1;
+		      end
+	   	   
+        endcase
+		  
+		  
+    end
+
+endmodule

@@ -1,0 +1,107 @@
+module VGA_manager(
+    input logic Clk,
+    input logic Reset,
+	 
+	 input logic VGA_HS,      // Horizontal sync pulse.  Active low
+                VGA_VS,      // Vertical sync pulse.  Active low
+					 
+	 output logic [7:0]  VGA_R,VGA_G,VGA_B,			 
+    
+	 input logic [9:0] X_Cord,       // horizontal coordinate
+                      Y_Cord,        // vertical coordinate
+                        
+	 //SRAM Signals
+    output logic CE, UB, LB, OE, WE,
+    output logic [19:0] ADDR,
+    inout wire [15:0] Data //tristate buffers need to be of type wire
+);
+	
+	assign CE = 1'b0;
+	assign WE = 1'b1;
+	assign OE = 1'b0;
+	assign LB = 1'b0;
+	assign UB = 1'b0;
+	
+	parameter [19:0] frame_width = 20'd640;
+	
+	logic [19:0] XX_Cord ;
+	assign XX_Cord = {10'b0 , X_Cord};
+	
+	logic [19:0] YY_Cord ;
+	assign YY_Cord = {10'b0 , Y_Cord};
+	
+	assign ADDR = YY_Cord * frame_width + XX_Cord ;
+	
+/*	
+	logic [9:0] current_row;
+	logic [19:0] current_address;
+	
+	assign ADDR = current_address;
+	
+	logic load_VGA_row,inc_row_counter,inc_address_counter,
+	      reset_row_counter,reset_address_counter;
+*/			
+	logic [15:0]data_from_tristate, data_to_tristate;
+	
+//	logic [23:0] RGB_extended;
+				
+ 
+//logic CE_us,UB_us,LB_us,OE_us,WE_us;
+//sync signal_sync[4:0] (Clk, {CE_us, UB_us, LB_us, OE_us , WE_us}, {CE, UB, LB, OE , WE});
+
+/*
+//Edge detector for HS and VS signals
+    logic HS_clk_delayed, HS_rising_edge;
+    always_ff @ (posedge Clk) begin
+        HS_clk_delayed <= VGA_HS;
+        HS_rising_edge <= (VGA_HS == 1'b1) && (HS_clk_delayed == 1'b0);
+    end
+	 
+    logic VS_clk_delayed, VS_rising_edge;
+    always_ff @ (posedge Clk) begin
+        VS_clk_delayed <= VGA_VS;
+        VS_rising_edge <= (VGA_VS == 1'b1) && (VS_clk_delayed == 1'b0);
+    end
+*/
+	 
+// The tri-state buffer serves as the interface between Mem2IO and SRAM
+tristate #(.N(16)) tr0(
+    .Clk(Clk), .tristate_output_enable(~WE), .Data_write(data_to_tristate), 
+	 .Data_read(data_from_tristate), .Data(Data) );
+
+/*
+// State machine and control signals
+master_controller my_master_controller( .Clk(Clk), .Reset(Reset), .HS_start(HS_rising_edge),
+						 .VS_start(VS_rising_edge), .current_row(current_row),
+						 .current_address(current_address), .load_VGA_row(load_VGA_row),
+						 .inc_row_counter(inc_row_counter),
+						 .inc_address_counter(inc_address_counter),
+						 .reset_row_counter(reset_row_counter),
+						 .reset_address_counter(reset_address_counter),
+						 .Mem_CE(CE_us),.Mem_UB(UB_us),.Mem_LB(LB_us),
+						 .Mem_OE(OE_us),.Mem_WE(WE_us)
+				 );
+*/
+				 
+//row counter
+/*
+row_counter my_row_counter( .clk(Clk),
+									 .asynch_clr(reset_row_counter),
+									 .enable(inc_row_counter),
+									 .row_current(current_row));
+ 				 
+/*
+/*									 
+//VGA_ROW
+VGA_row my_VGA_row( .CLK(Clk),.RESET(Reset),.load_VGA_row(load_VGA_row),
+						  .addr_by_VGA(X_Cord),.addr_by_sram(current_row),
+					     .sram_write(RGB_extended), .VGA_R(VGA_R),
+						  .VGA_G(VGA_G),.VGA_B(VGA_B));
+*/
+
+//VGA Extender
+
+RGB_extender my_rgb_extender( .input_data(data_from_tristate), .R(VGA_R), .G(VGA_G), .B(VGA_B) );
+ 	
+
+endmodule

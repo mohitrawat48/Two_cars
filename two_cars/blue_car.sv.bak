@@ -1,0 +1,58 @@
+/*********************************
+
+Based off ball.sv from lab 8
+Player2 controls blue car
+**********************************/
+
+module  blue_car ( input logic        Clk,                // 50 MHz clock
+                             Reset,              // Active-high reset signal
+                             frame_clk,          // The clock indicating a new frame (~60Hz)
+               input logic [9:0]   DrawX, DrawY,       // Current pixel coordinates to be drawn on the monitor
+               output logic  is_car,             // Whether current pixel (DrawX, DrawY) belongs to ball or background
+					output logic [9:0] pixel_x_in_car, pixel_y_in_car, //relative to the car's top left pixel which is (0,0)
+					input logic [7:0]   keycode
+					);
+				
+	 //internal logic - retrieve data from registers
+	 logic [9:0] CurrX, CurrY;  //the top left coordinate of the car's current position
+	 
+	 CurrX = to be done;
+	 CurrY = to be done;
+    
+	 //Car parameters
+    parameter [9:0] Car_X_Min = CurrX;       // Leftmost point on the X axis
+    parameter [9:0] Car_X_Max = CurrX + 10'd74;     // Rightmost point on the X axis
+    parameter [9:0] Car_Y_Min = CurrY;       // Topmost point on the Y axis
+    parameter [9:0] Car_Y_Max = CurrY + 10'd99;     // Bottommost point on the Y axis
+	 
+	 //USB key code
+	 //Player 2
+	 parameter [7:0] key_8 = 8'h25;
+	 parameter [7:0] key_5 = 8'h22;
+	 parameter [7:0] key_4 = 8'h21;
+	 parameter [7:0] key_6 = 8'h23;
+	 
+	 always_ff @ posedge(Clk)
+	 begin
+		if(Reset)
+		begin
+			to be done 
+			set car's position to
+			500x500
+		end
+		else
+		begin
+			pixel_x_in_car <= DrawX - CurrX;
+			pixel_y_in_car <= DrawY - CurrY;
+		end
+	 end
+	 
+	 //Determine is_car
+	 always_comb
+	 begin
+		if( (DrawX >= Car_X_Min && DrawX <= Car_X_Max) && (DrawY >= Car_Y_Min && DrawY <= Car_Y_Max) )
+			is_car = 1'b1;
+		else
+			is_car = 1'b0;
+    end
+endmodule

@@ -1,0 +1,6 @@
+19:07:33 **** Build of configuration Nios II for project .project ****
+make all 
+make: *** No rule to make target `all'.  Stop.
+
+19:07:34 Build Finished (took 312ms)
+

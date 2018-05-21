@@ -1,0 +1,49 @@
+module random_num_gen (
+		input logic Clk,
+		input logic Reset,  //assume active high
+		input logic[9:0] car1_pos_x,
+		input logic[9:0] car1_pos_y,
+		input logic[9:0] car2_pos_x,
+		input logic[9:0] car2_pos_y,
+		output integer random_num,
+		input integer seed_in
+		);
+		
+		integer counter, counter_in,digit,digit_in,seed;
+		
+		assign seed = seed_in;//32'd3;
+		
+		always_ff @ (posedge Clk or posedge Reset)
+		begin
+			if(Reset)	
+			begin
+				counter <= 0;
+				digit <= seed;
+			end
+			else
+			begin
+				counter <= counter_in;
+				digit <= digit_in;
+			end
+			end
+
+		always_comb
+		begin
+			counter_in = counter + digit ;
+			digit_in = digit;
+			
+			random_num = ( counter % 32'd2 ) + 32'd1 ;//^ car1_pos_x ^ car1_pos_y ^ flip_car2_pos_x ^ car2_pos_y ; 
+		
+			if( counter > 32'd10000 )
+			begin
+				counter_in = 0;
+				digit_in = digit * digit;		
+			end
+			
+			if( digit > 32'd100 )
+			begin
+				digit_in = seed;		
+			end
+		end
+
+endmodule

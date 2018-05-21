@@ -1,0 +1,27 @@
+/*
+ * ECE385-HelperTools/PNG-To-Txt
+ * Author: Rishi Thakkar
+ *
+ */
+
+module  onchip
+(
+		input logic [16:0] read_address,
+		input logic Clk,
+		output logic [15:0] data_Out
+);
+
+// mem has width of 3 bits and a total of 400 addresses
+logic [15:0] mem [0:131072];
+
+initial
+begin
+	 $readmemh("sprites/sprite_file.txt", mem);
+end
+
+
+always_ff @ (posedge Clk) begin
+	data_Out<= mem[read_address];
+end
+
+endmodule

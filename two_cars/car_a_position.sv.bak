@@ -1,0 +1,12 @@
+module car_a_position (
+	input  logic [7:0]  keycode; 
+	output logic [9:0] car_a_x , car_a_y;
+);
+
+always_ff @ (posedge Clk)
+begin
+	q <= d;
+end
+
+endmodule
+

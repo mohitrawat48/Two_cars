@@ -1,0 +1,22 @@
+module RGB_extender (
+		
+	input logic [15:0] input_data,
+	output logic [7:0] R,G,B
+
+	);
+		
+	logic [7:0] RR ;
+	assign RR	= { input_data[15:11], 3'b000};
+	
+	logic [7:0] GG ;
+	assign GG	= { input_data[10:5], 2'b00};
+	
+	logic [7:0] BB ;
+	assign BB	= { input_data[4:0], 3'b000};
+	
+	assign R = RR;
+	assign G = GG;
+	assign B = BB;
+	
+endmodule
+	
